@@ -5,7 +5,9 @@ import 'package:myapp/services/firestore_service.dart';
 
 class AddExpense extends StatefulWidget {
   final String userId;
-  const AddExpense({super.key, required this.userId});
+  final DateTime? selectedDate;
+
+  const AddExpense({super.key, required this.userId, this.selectedDate});
 
   @override
   State<AddExpense> createState() => _AddExpenseState();
@@ -52,7 +54,7 @@ class _AddExpenseState extends State<AddExpense> {
                       userId: widget.userId,
                       amount: amount,
                       category: category,
-                      date: DateTime.now(),
+                      date: widget.selectedDate ?? DateTime.now(),
                     ),
                   );
                   Navigator.pop(context);

@@ -1,5 +1,6 @@
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/models/user.dart';
@@ -15,6 +16,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Activate App Check
+  await FirebaseAppCheck.instance.activate(
+    // Use the debug provider for development
+    androidProvider: AndroidProvider.debug,
+  );
+
   runApp(
     MultiProvider(
       providers: [
