@@ -1,10 +1,16 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myapp/models/app_user.dart';
 import 'package:myapp/models/expense.dart';
 import 'package:myapp/models/income.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  // Create a new user
+  Future<void> addUser(AppUser user) {
+    return _db.collection('users').doc(user.uid).set(user.toFirestore());
+  }
 
   // Add income
   Future<void> addIncome(Income income) {

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:myapp/main.dart';
-import 'package:myapp/services/auth_service.dart';
+import 'package:myapp/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
@@ -13,15 +13,18 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  String name = '';
   String email = '';
   String password = '';
-  String error = '';
+  String confirmPassword = '';
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
@@ -59,6 +62,20 @@ class _RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 50.0),
                 TextFormField(
+                  validator: (val) => val!.isEmpty ? 'Enter your name' : null,
+                  onChanged: (val) {
+                    setState(() => name = val);
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    prefixIcon: const Icon(Icons.person_outline),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
                   validator: (val) => val!.isEmpty ? 'Enter an email' : null,
                   onChanged: (val) {
                     setState(() => email = val);
@@ -73,8 +90,28 @@ class _RegisterState extends State<Register> {
                 ),
                 const SizedBox(height: 20.0),
                 TextFormField(
-                  obscureText: true,
-                  validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
+                  obscureText: !_isPasswordVisible,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'Enter a password';
+                    }
+                    if (val.length < 8) {
+                      return 'Password must be at least 8 characters long';
+                    }
+                    if (!val.contains(RegExp(r'[A-Z]'))) {
+                      return 'Password must contain an uppercase letter';
+                    }
+                    if (!val.contains(RegExp(r'[a-z]'))) {
+                      return 'Password must contain a lowercase letter';
+                    }
+                    if (!val.contains(RegExp(r'[0-9]'))) {
+                      return 'Password must contain a number';
+                    }
+                    if (!val.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
+                      return 'Password must contain a special character';
+                    }
+                    return null;
+                  },
                   onChanged: (val) {
                     setState(() => password = val);
                   },
@@ -84,25 +121,62 @@ class _RegisterState extends State<Register> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  obscureText: !_isPasswordVisible,
+                  validator: (val) {
+                    if (val != password) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                  onChanged: (val) {
+                    setState(() => confirmPassword = val);
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30.0),
-                ElevatedButton(
-                  child: const Text('Register'),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-                      if (result == null) {
-                        setState(() {
-                          error = 'Please supply a valid email';
-                        });
-                      }
-                    }
-                  },
-                ),
+                authProvider.loading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        child: const Text('Register'),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await authProvider.register(name, email, password);
+                          }
+                        },
+                      ),
                 const SizedBox(height: 12.0),
                 Text(
-                  error,
+                  authProvider.error,
                   style: const TextStyle(color: Colors.red, fontSize: 14.0),
                   textAlign: TextAlign.center,
                 ),

@@ -1,13 +1,15 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:myapp/models/user.dart';
+import 'package:myapp/models/app_user.dart';
+import 'package:myapp/services/firestore_service.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirestoreService _firestoreService = FirestoreService();
 
   // Create user object from Firebase user
   AppUser? _userFromFirebaseUser(User? user) {
-    return user != null ? AppUser(uid: user.uid, email: user.email!) : null;
+    return user != null ? AppUser(uid: user.uid, email: user.email!, name: user.displayName) : null;
   }
 
   // Auth change user stream
@@ -28,11 +30,17 @@ class AuthService {
   }
 
   // Register with email and password
-  Future<AppUser?> registerWithEmailAndPassword(String email, String password) async {
+  Future<AppUser?> registerWithEmailAndPassword(String name, String email, String password) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
-      // You can create a new document for the user with the uid here
+
+      // Create a new user object
+      AppUser newUser = AppUser(uid: user!.uid, email: email, name: name);
+
+      // Save the user to Firestore
+      await _firestoreService.addUser(newUser);
+
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

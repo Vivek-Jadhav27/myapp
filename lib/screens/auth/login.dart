@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:myapp/main.dart';
-import 'package:myapp/services/auth_service.dart';
+import 'package:myapp/services/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -13,15 +12,16 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   String email = '';
   String password = '';
-  String error = '';
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
@@ -73,8 +73,28 @@ class _LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 20.0),
                 TextFormField(
-                  obscureText: true,
-                  validator: (val) => val!.length < 6 ? 'Enter a password 6+ chars long' : null,
+                  obscureText: !_isPasswordVisible,
+                  validator: (val) {
+                    if (val!.isEmpty) {
+                      return 'Enter a password';
+                    }
+                    if (val.length < 8) {
+                      return 'Password must be at least 8 characters long';
+                    }
+                    if (!val.contains(RegExp(r'[A-Z]'))) {
+                      return 'Password must contain an uppercase letter';
+                    }
+                    if (!val.contains(RegExp(r'[a-z]'))) {
+                      return 'Password must contain a lowercase letter';
+                    }
+                    if (!val.contains(RegExp(r'[0-9]'))) {
+                      return 'Password must contain a number';
+                    }
+                    if (!val.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'))) {
+                      return 'Password must contain a special character';
+                    }
+                    return null;
+                  },
                   onChanged: (val) {
                     setState(() => password = val);
                   },
@@ -84,25 +104,32 @@ class _LoginState extends State<Login> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30.0),
-                ElevatedButton(
-                  child: const Text('Sign In'),
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                      if (result == null) {
-                        setState(() {
-                          error = 'Could not sign in with those credentials';
-                        });
-                      }
-                    }
-                  },
-                ),
+                authProvider.loading
+                    ? const Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        child: const Text('Sign In'),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await authProvider.signIn(email, password);
+                          }
+                        },
+                      ),
                 const SizedBox(height: 12.0),
                 Text(
-                  error,
+                  authProvider.error,
                   style: const TextStyle(color: Colors.red, fontSize: 14.0),
                   textAlign: TextAlign.center,
                 ),
