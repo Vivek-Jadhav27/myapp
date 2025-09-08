@@ -35,6 +35,18 @@ class AuthService {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
 
+      if (user == null) {
+        return null;
+      }
+
+      // Update the user's display name in Firebase Auth
+      await user.updateDisplayName(name);
+      
+      // We need to reload the user to get the updated display name
+      await user.reload();
+      user = _auth.currentUser;
+
+
       // Create a new user object
       AppUser newUser = AppUser(uid: user!.uid, email: email, name: name);
 
@@ -42,9 +54,9 @@ class AuthService {
       await _firestoreService.addUser(newUser);
 
       return _userFromFirebaseUser(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
+    } on FirebaseAuthException catch (e) {
+        // Re-throw the exception to be handled by the calling function in AuthProvider
+        rethrow;
     }
   }
 

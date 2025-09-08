@@ -1,59 +1,59 @@
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myapp/models/app_user.dart';
 import 'package:myapp/services/auth_service.dart';
 
 class AuthProvider with ChangeNotifier {
-  final AuthService _auth = AuthService();
-
+  final AuthService _authService = AuthService();
+  AppUser? _user;
   bool _loading = false;
   String _error = '';
 
+  AppUser? get user => _user;
   bool get loading => _loading;
   String get error => _error;
 
-  void _setLoading(bool loading) {
-    _loading = loading;
+  AuthProvider() {
+    _authService.user.listen((user) {
+      _user = user;
+      notifyListeners();
+    });
+  }
+
+  Future<void> signIn(String email, String password) async {
+    _loading = true;
+    _error = '';
+    notifyListeners();
+    try {
+      _user = await _authService.signInWithEmailAndPassword(email, password);
+      if (_user == null) {
+        _error = 'Invalid email or password.';
+      }
+    } catch (e) {
+      _error = 'An unknown error occurred.';
+    }
+    _loading = false;
     notifyListeners();
   }
 
-  void _setError(String error) {
-    _error = error;
+  Future<void> register(String name, String email, String password) async {
+    _loading = true;
+    _error = '';
+    notifyListeners();
+    try {
+      _user = await _authService.registerWithEmailAndPassword(name, email, password);
+    } on FirebaseAuthException catch (e) {
+      // Use the specific error message from Firebase
+      _error = e.message ?? 'An unknown error occurred during registration.';
+    } catch (e) {
+      _error = 'An unknown error occurred.';
+    }
+    _loading = false;
     notifyListeners();
   }
 
-  Future<bool> signIn(String email, String password) async {
-    _setError('');
-    _setLoading(true);
-    try {
-      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-      _setLoading(false);
-      if (result == null) {
-        _setError('Could not sign in with those credentials');
-        return false;
-      }
-      return true;
-    } catch (e) {
-      _setLoading(false);
-      _setError('An unexpected error occurred: $e');
-      return false;
-    }
-  }
-
-  Future<bool> register(String name, String email, String password) async {
-    _setError('');
-    _setLoading(true);
-    try {
-      dynamic result = await _auth.registerWithEmailAndPassword(name, email, password);
-      _setLoading(false);
-      if (result == null) {
-        _setError('Please supply a valid email');
-        return false;
-      }
-      return true;
-    } catch (e) {
-      _setLoading(false);
-      _setError('An unexpected error occurred: $e');
-      return false;
-    }
+  Future<void> signOut() async {
+    await _authService.signOut();
   }
 }
