@@ -26,6 +26,11 @@ class FirestoreService {
         .map((snapshot) => snapshot.docs.map((doc) => Income.fromFirestore(doc)).toList());
   }
 
+  // Delete income
+  Future<void> deleteIncome(String incomeId) {
+    return _db.collection('incomes').doc(incomeId).delete();
+  }
+
   // Add expense
   Future<void> addExpense(Expense expense) {
     return _db.collection('expenses').add(expense.toFirestore());

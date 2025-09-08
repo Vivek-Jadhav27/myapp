@@ -132,7 +132,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         Expanded(
                           child: ListView(
                             children: [
-                              ...selectedDayIncomes.map((income) => IncomeTransactionListTile(income: income)),
+                              ...selectedDayIncomes.map((income) => IncomeTransactionListTile(income: income, firestoreService: firestoreService)),
                               ...selectedDayExpenses.map((expense) => ExpenseTransactionListTile(expense: expense, firestoreService: firestoreService)),
                             ],
                           ),
@@ -168,7 +168,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
 class IncomeTransactionListTile extends StatelessWidget {
   final Income income;
-  const IncomeTransactionListTile({super.key, required this.income});
+  final FirestoreService firestoreService;
+  const IncomeTransactionListTile({super.key, required this.income, required this.firestoreService});
 
   @override
   Widget build(BuildContext context) {
@@ -180,8 +181,27 @@ class IncomeTransactionListTile extends StatelessWidget {
         subtitle: Text('\$${income.amount.toStringAsFixed(2)}'),
         trailing: IconButton(
           icon: const Icon(Icons.delete, color: Colors.redAccent),
-          onPressed: () {
-            // Add delete functionality here
+          onPressed: () async {
+            final confirm = await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Confirm Deletion'),
+                content: const Text('Are you sure you want to delete this income?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('Delete'),
+                  ),
+                ],
+              ),
+            );
+            if (confirm == true) {
+              firestoreService.deleteIncome(income.id);
+            }
           },
         ),
       ),
@@ -204,8 +224,27 @@ class ExpenseTransactionListTile extends StatelessWidget {
         subtitle: Text('\$${expense.amount.toStringAsFixed(2)}'),
         trailing: IconButton(
           icon: const Icon(Icons.delete, color: Colors.redAccent),
-          onPressed: () {
-            firestoreService.deleteExpense(expense.id);
+          onPressed: () async {
+            final confirm = await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Confirm Deletion'),
+                content: const Text('Are you sure you want to delete this expense?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('Delete'),
+                  ),
+                ],
+              ),
+            );
+            if (confirm == true) {
+              firestoreService.deleteExpense(expense.id);
+            }
           },
         ),
       ),
