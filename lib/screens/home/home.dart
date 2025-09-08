@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:myapp/main.dart';
 import 'package:myapp/models/expense.dart';
 import 'package:myapp/models/income.dart';
 import 'package:myapp/models/user.dart';
@@ -23,11 +24,17 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final user = Provider.of<AppUser?>(context);
     final firestoreService = FirestoreService();
+    final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Finance Tracker'),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(themeProvider.themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () => themeProvider.toggleTheme(),
+            tooltip: 'Toggle Theme',
+          ),
           TextButton.icon(
             icon: const Icon(Icons.person, color: Colors.white),
             label: const Text('Logout', style: TextStyle(color: Colors.white)),
@@ -65,16 +72,16 @@ class _HomeState extends State<Home> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             'Total: \$${total.toStringAsFixed(2)}',
-                            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                            style: Theme.of(context).textTheme.displayLarge,
                           ),
                         ),
                         const Divider(),
-                        const Text('Income', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text('Income', style: Theme.of(context).textTheme.titleLarge),
                         Expanded(
                           child: IncomeList(incomeList: incomeList),
                         ),
                         const Divider(),
-                        const Text('Expenses', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text('Expenses', style: Theme.of(context).textTheme.titleLarge),
                         Expanded(
                           child: ExpenseList(expenseList: expenseList, firestoreService: firestoreService),
                         ),
@@ -128,8 +135,8 @@ class IncomeList extends StatelessWidget {
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: ListTile(
-            title: Text(income.source),
-            subtitle: Text('\$${income.amount.toStringAsFixed(2)}'),
+            title: Text(income.source, style: Theme.of(context).textTheme.bodyMedium),
+            subtitle: Text('\$${income.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyMedium),
           ),
         );
       },
@@ -151,8 +158,8 @@ class ExpenseList extends StatelessWidget {
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: ListTile(
-            title: Text(expense.category),
-            subtitle: Text('\$${expense.amount.toStringAsFixed(2)}'),
+            title: Text(expense.category, style: Theme.of(context).textTheme.bodyMedium),
+            subtitle: Text('\$${expense.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyMedium),
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
