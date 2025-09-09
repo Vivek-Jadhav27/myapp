@@ -25,6 +25,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<AppUser?>(context);
     final firestoreService = FirestoreService();
+    final theme = Theme.of(context);
+
+    // Pastel & Friendly Theme Colors
+    const Color incomeColor = Color(0xFF6EE7B7); // Soft Mint Green
+    const Color expenseColor = Color(0xFFFCA5A5); // Soft Coral Red
+    const Color savingsColor = Color(0xFF93C5FD); // Pastel Blue
 
     return user == null
         ? const Center(child: CircularProgressIndicator())
@@ -76,9 +82,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              _buildSummary('Income', '\$${monthlyIncome.toStringAsFixed(2)}', Colors.green),
-                              _buildSummary('Expenses', '\$${monthlyExpense.toStringAsFixed(2)}', Colors.red),
-                              _buildSummary('Savings', '\$${monthlySavings.toStringAsFixed(2)}', Colors.blue),
+                              _buildSummary('Income', '\$${monthlyIncome.toStringAsFixed(2)}', incomeColor),
+                              _buildSummary('Expenses', '\$${monthlyExpense.toStringAsFixed(2)}', expenseColor),
+                              _buildSummary('Savings', '\$${monthlySavings.toStringAsFixed(2)}', savingsColor),
                             ],
                           ),
                         ),
@@ -108,6 +114,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               _focusedDay = focusedDay;
                             });
                           },
+                           calendarStyle: CalendarStyle(
+                            todayDecoration: BoxDecoration(
+                              color: theme.colorScheme.primary.withOpacity(0.5),
+                              shape: BoxShape.circle,
+                            ),
+                            selectedDecoration: BoxDecoration(
+                              color: theme.colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
                           calendarBuilders: CalendarBuilders(
                             markerBuilder: (context, day, events) {
                               if (events.isEmpty) return null;
@@ -120,7 +136,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     height: 8,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: event == 'income' ? Colors.green : Colors.red,
+                                      color: event == 'income' ? incomeColor : expenseColor,
                                     ),
                                   );
                                 }).toList(),
@@ -158,9 +174,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _buildSummary(String title, String amount, Color color) {
     return Column(
       children: [
-        Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 16)),
         const SizedBox(height: 4),
-        Text(amount, style: TextStyle(fontSize: 20, color: color, fontWeight: FontWeight.bold)),
+        Text(amount, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 20, color: color, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -176,11 +192,11 @@ class IncomeTransactionListTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ListTile(
-        leading: const Icon(Icons.attach_money, color: Colors.green),
-        title: Text(income.source),
-        subtitle: Text('\$${income.amount.toStringAsFixed(2)}'),
+        leading: const Icon(Icons.attach_money, color: Color(0xFF6EE7B7)),
+        title: Text(income.source, style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Text('\$${income.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyMedium),
         trailing: IconButton(
-          icon: const Icon(Icons.delete, color: Colors.redAccent),
+          icon: const Icon(Icons.delete, color: Color(0xFFFCA5A5)),
           onPressed: () async {
             final confirm = await showDialog(
               context: context,
@@ -219,11 +235,11 @@ class ExpenseTransactionListTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ListTile(
-        leading: const Icon(Icons.money_off, color: Colors.red),
-        title: Text(expense.category),
-        subtitle: Text('\$${expense.amount.toStringAsFixed(2)}'),
+        leading: const Icon(Icons.money_off, color: Color(0xFFFCA5A5)),
+        title: Text(expense.category, style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Text('\$${expense.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyMedium),
         trailing: IconButton(
-          icon: const Icon(Icons.delete, color: Colors.redAccent),
+          icon: const Icon(Icons.delete, color: Color(0xFFFCA5A5)),
           onPressed: () async {
             final confirm = await showDialog(
               context: context,
@@ -261,15 +277,22 @@ class AddTransactionSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Add a new transaction', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('Add a new transaction', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 20),
           ElevatedButton.icon(
             icon: const Icon(Icons.add, color: Colors.white),
-            label: const Text('Add Income', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green, minimumSize: const Size(double.infinity, 50)),
+            label: Text('Add Income', style: Theme.of(context).textTheme.labelLarge),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF6EE7B7), minimumSize: const Size(double.infinity, 50)),
             onPressed: () {
               Navigator.pop(context);
               showModalBottomSheet(
@@ -281,8 +304,8 @@ class AddTransactionSheet extends StatelessWidget {
           const SizedBox(height: 12),
           ElevatedButton.icon(
             icon: const Icon(Icons.remove, color: Colors.white),
-            label: const Text('Add Expense', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, minimumSize: const Size(double.infinity, 50)),
+            label: Text('Add Expense', style: Theme.of(context).textTheme.labelLarge),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFCA5A5), minimumSize: const Size(double.infinity, 50)),
             onPressed: () {
               Navigator.pop(context);
               showModalBottomSheet(

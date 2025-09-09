@@ -1,4 +1,3 @@
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +16,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Activate App Check
+  // Activate Firebase App Check
   await FirebaseAppCheck.instance.activate(
-    // Use the debug provider for development
-    androidProvider: AndroidProvider.debug,
+    androidProvider: AndroidProvider.debug, // Use debug for dev, switch later
   );
 
   runApp(
@@ -40,7 +38,8 @@ class ThemeProvider with ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
 
   void toggleTheme() {
-    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    _themeMode =
+        _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
   }
 }
@@ -50,56 +49,96 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color primarySeedColor = Colors.deepPurple;
+    // Pastel & Friendly Theme Colors
+    const Color primaryColor = Color(0xFF6EE7B7); // Soft Mint Green
+    const Color secondaryColor = Color(0xFFFCA5A5); // Soft Coral Red
+    const Color accentColor = Color(0xFF93C5FD); // Pastel Blue
+    const Color backgroundColor = Color(0xFFFDFDFD); // Off-white
+    const Color textColor = Color(0xFF374151); // Neutral Grey
 
     final TextTheme appTextTheme = TextTheme(
-      displayLarge: GoogleFonts.oswald(fontSize: 57, fontWeight: FontWeight.bold),
-      titleLarge: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.w500),
-      bodyMedium: GoogleFonts.openSans(fontSize: 14),
+      displayLarge: GoogleFonts.nunito(
+          fontSize: 57, fontWeight: FontWeight.bold, color: textColor),
+      titleLarge: GoogleFonts.nunito(
+          fontSize: 22, fontWeight: FontWeight.w700, color: textColor),
+      bodyMedium: GoogleFonts.nunito(fontSize: 14, color: textColor),
+      labelLarge: GoogleFonts.nunito(
+          fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
     );
 
     final ThemeData lightTheme = ThemeData(
       useMaterial3: true,
+      scaffoldBackgroundColor: backgroundColor,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primarySeedColor,
+        seedColor: primaryColor,
+        primary: primaryColor,
+        secondary: secondaryColor,
+        tertiary: accentColor,
         brightness: Brightness.light,
       ),
       textTheme: appTextTheme,
       appBarTheme: AppBarTheme(
-        backgroundColor: primarySeedColor,
+        backgroundColor: primaryColor,
         foregroundColor: Colors.white,
-        titleTextStyle: GoogleFonts.oswald(fontSize: 24, fontWeight: FontWeight.bold),
+        titleTextStyle:
+            GoogleFonts.nunito(fontSize: 24, fontWeight: FontWeight.bold),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
-          backgroundColor: primarySeedColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          backgroundColor: primaryColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
+          textStyle:
+              GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+      ),
+      cardTheme: const CardThemeData(
+        elevation: 2,
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
       ),
     );
 
     final ThemeData darkTheme = ThemeData(
       useMaterial3: true,
+      scaffoldBackgroundColor: const Color(0xFF1F2937), // Dark grey
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primarySeedColor,
+        seedColor: primaryColor,
+        primary: primaryColor,
+        secondary: secondaryColor,
+        tertiary: accentColor,
         brightness: Brightness.dark,
       ),
-      textTheme: appTextTheme,
+      textTheme: appTextTheme.apply(
+        bodyColor: Colors.white,
+        displayColor: Colors.white,
+      ),
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: const Color(0xFF111827), // Dark app bar
         foregroundColor: Colors.white,
-        titleTextStyle: GoogleFonts.oswald(fontSize: 24, fontWeight: FontWeight.bold),
+        titleTextStyle:
+            GoogleFonts.nunito(fontSize: 24, fontWeight: FontWeight.bold),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.black,
-          backgroundColor: primarySeedColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          foregroundColor: Colors.white,
+          backgroundColor: primaryColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          textStyle: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
+          textStyle:
+              GoogleFonts.nunito(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+      ),
+      cardTheme: const CardThemeData(
+        elevation: 2,
+        color: Color(0xFF374151), // Dark card color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
         ),
       ),
     );
