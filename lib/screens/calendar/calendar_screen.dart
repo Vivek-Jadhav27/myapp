@@ -187,14 +187,30 @@ class IncomeTransactionListTile extends StatelessWidget {
   final FirestoreService firestoreService;
   const IncomeTransactionListTile({super.key, required this.income, required this.firestoreService});
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ListTile(
         leading: const Icon(Icons.attach_money, color: Color(0xFF6EE7B7)),
         title: Text(income.source, style: Theme.of(context).textTheme.bodyMedium),
-        subtitle: Text('\$${income.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('\$${income.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyMedium),
+            if (income.notes?.isNotEmpty ?? false)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  income.notes!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontStyle: FontStyle.italic,
+                        color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                      ),
+                ),
+              ),
+          ],
+        ),
         trailing: IconButton(
           icon: const Icon(Icons.delete, color: Color(0xFFFCA5A5)),
           onPressed: () async {
@@ -230,14 +246,30 @@ class ExpenseTransactionListTile extends StatelessWidget {
   final FirestoreService firestoreService;
   const ExpenseTransactionListTile({super.key, required this.expense, required this.firestoreService});
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ListTile(
         leading: const Icon(Icons.money_off, color: Color(0xFFFCA5A5)),
         title: Text(expense.category, style: Theme.of(context).textTheme.bodyMedium),
-        subtitle: Text('\$${expense.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyMedium),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('\$${expense.amount.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyMedium),
+            if (expense.notes?.isNotEmpty ?? false)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  expense.notes!,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontStyle: FontStyle.italic,
+                        color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.7),
+                      ),
+                ),
+              ),
+          ],
+        ),
         trailing: IconButton(
           icon: const Icon(Icons.delete, color: Color(0xFFFCA5A5)),
           onPressed: () async {

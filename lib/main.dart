@@ -3,6 +3,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/models/user.dart';
+import 'package:myapp/providers/category_provider.dart';
 import 'package:myapp/screens/wrapper.dart';
 import 'package:myapp/services/auth_provider.dart';
 import 'package:myapp/services/auth_service.dart';
@@ -26,6 +27,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => CategoryProvider()),
       ],
       child: const MyApp(),
     ),

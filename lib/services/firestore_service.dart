@@ -12,6 +12,11 @@ class FirestoreService {
     return _db.collection('users').doc(user.uid).set(user.toFirestore());
   }
 
+  // Update a user
+  Future<void> updateUser(AppUser user) {
+    return _db.collection('users').doc(user.uid).update(user.toFirestore());
+  }
+
   // Add income
   Future<void> addIncome(Income income) {
     return _db.collection('incomes').add(income.toFirestore());

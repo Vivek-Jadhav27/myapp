@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:myapp/models/expense.dart';
 import 'package:myapp/models/user.dart';
+import 'package:myapp/providers/category_provider.dart';
 import 'package:myapp/services/firestore_service.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -34,6 +35,7 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
     final user = Provider.of<AppUser?>(context);
     final firestoreService = FirestoreService();
     final theme = Theme.of(context);
+    final categoryProvider = Provider.of<CategoryProvider>(context);
 
     return Scaffold(
       body: user == null
@@ -62,8 +64,9 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
                 }
 
                 final pieChartSections = spendingByCategory.entries.map((entry) {
+                  final categoryIndex = categoryProvider.categories.indexOf(entry.key);
                   return PieChartSectionData(
-                    color: _getColorForCategory(entry.key),
+                    color: _getColorForCategory(categoryIndex),
                     value: entry.value,
                     title: '${(entry.value / monthlyExpenses.fold(0.0, (sum, item) => sum + item.amount) * 100).toStringAsFixed(0)}%',
                     radius: 100,
@@ -117,11 +120,12 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
                     Expanded(
                       child: ListView(
                         children: spendingByCategory.entries.map((entry) {
+                           final categoryIndex = categoryProvider.categories.indexOf(entry.key);
                           return ListTile(
                             leading: Container(
                               width: 20,
                               height: 20,
-                              color: _getColorForCategory(entry.key),
+                              color: _getColorForCategory(categoryIndex),
                             ),
                             title: Text(entry.key),
                             trailing: Text(
@@ -139,22 +143,19 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
     );
   }
 
-  Color _getColorForCategory(String category) {
-    // Simple color mapping for categories
-    // You can expand this with more categories and colors
-    switch (category.toLowerCase()) {
-      case 'food':
-        return Colors.red;
-      case 'transportation':
-        return Colors.blue;
-      case 'utilities':
-        return Colors.green;
-      case 'rent':
-        return Colors.orange;
-      case 'entertainment':
-        return Colors.purple;
-      default:
-        return Colors.grey;
-    }
+  Color _getColorForCategory(int categoryIndex) {
+    final colors = [
+      Colors.red, 
+      Colors.blue, 
+      Colors.green, 
+      Colors.orange, 
+      Colors.purple, 
+      Colors.brown, 
+      Colors.teal, 
+      Colors.pink,
+      Colors.indigo,
+      Colors.cyan
+    ];
+    return colors[categoryIndex % colors.length];
   }
 }

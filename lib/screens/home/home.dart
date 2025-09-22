@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myapp/main.dart';
 import 'package:myapp/screens/analysis/analysis_screen.dart';
 import 'package:myapp/screens/calendar/calendar_screen.dart';
+import 'package:myapp/screens/profile/profile_screen.dart';
+import 'package:myapp/screens/settings/settings_screen.dart';
 import 'package:myapp/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +31,30 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text(_currentIndex == 0 ? 'Finance Tracker' : 'Spending Analysis'),
         actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.person, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
+              );
+            },
+            tooltip: 'Profile',
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+            tooltip: 'Settings',
+          ),
           IconButton(
             icon: Icon(themeProvider.themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
             onPressed: () => themeProvider.toggleTheme(),

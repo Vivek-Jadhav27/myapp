@@ -60,6 +60,19 @@ class AuthService {
         rethrow;
     }
   }
+  // Update user name
+  Future<void> updateUserName(String name) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      await user.updateDisplayName(name);
+      await user.reload();
+      final updatedUser = _auth.currentUser;
+      await _firestoreService.updateUser(
+        AppUser(uid: updatedUser!.uid, email: updatedUser.email!, name: name),
+      );
+    }
+  }
+
 
   // Sign out
   Future<void> signOut() async {

@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:myapp/models/expense.dart';
+import 'package:myapp/providers/category_provider.dart';
 import 'package:myapp/services/firestore_service.dart';
+import 'package:provider/provider.dart';
 
 class AddExpense extends StatefulWidget {
   final String userId;
@@ -17,16 +19,12 @@ class _AddExpenseState extends State<AddExpense> {
   final _formKey = GlobalKey<FormState>();
   double amount = 0;
   String? _selectedCategory;
-  final List<String> _categories = [
-    'Food',
-    'Entertainment',
-    'Transport',
-    'Miscellaneous',
-    'Rent'
-  ];
+  String notes = ''; // Added notes field
 
   @override
   Widget build(BuildContext context) {
+    final categoryProvider = Provider.of<CategoryProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Form(
@@ -46,7 +44,7 @@ class _AddExpenseState extends State<AddExpense> {
               value: _selectedCategory,
               validator: (val) => val == null ? 'Please select a category' : null,
               onChanged: (val) => setState(() => _selectedCategory = val),
-              items: _categories.map((String category) {
+              items: categoryProvider.categories.map((String category) {
                 return DropdownMenuItem(
                   value: category,
                   child: Text(category),
@@ -61,6 +59,11 @@ class _AddExpenseState extends State<AddExpense> {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20.0),
+            TextFormField(
+              onChanged: (val) => setState(() => notes = val),
+              decoration: const InputDecoration(hintText: 'Notes (Optional)'),
+            ),
+            const SizedBox(height: 20.0),
             ElevatedButton(
               child: const Text('Add Expense'),
               onPressed: () async {
@@ -72,6 +75,7 @@ class _AddExpenseState extends State<AddExpense> {
                       amount: amount,
                       category: _selectedCategory!,
                       date: widget.selectedDate ?? DateTime.now(),
+                      notes: notes, // Pass notes to Expense
                     ),
                   );
                   if (mounted) {

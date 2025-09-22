@@ -7,6 +7,7 @@ class Expense {
   final double amount;
   final String category;
   final DateTime date;
+  final String? notes; // Added notes field
 
   Expense({
     required this.id,
@@ -14,6 +15,7 @@ class Expense {
     required this.amount,
     required this.category,
     required this.date,
+    this.notes, // Added to constructor
   });
 
   factory Expense.fromFirestore(DocumentSnapshot doc) {
@@ -24,6 +26,7 @@ class Expense {
       amount: data['amount'],
       category: data['category'],
       date: (data['date'] as Timestamp).toDate(),
+      notes: data['notes'], // Read from Firestore
     );
   }
 
@@ -33,6 +36,7 @@ class Expense {
       'amount': amount,
       'category': category,
       'date': date,
+      'notes': notes, // Write to Firestore
     };
   }
 }

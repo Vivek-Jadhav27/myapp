@@ -17,6 +17,7 @@ class _AddIncomeState extends State<AddIncome> {
   final _formKey = GlobalKey<FormState>();
   double amount = 0;
   String source = '';
+  String notes = ''; // Added notes field
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +45,11 @@ class _AddIncomeState extends State<AddIncome> {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20.0),
+            TextFormField(
+              onChanged: (val) => setState(() => notes = val),
+              decoration: const InputDecoration(hintText: 'Notes (Optional)'),
+            ),
+            const SizedBox(height: 20.0),
             ElevatedButton(
               child: const Text('Add Income'),
               onPressed: () async {
@@ -55,6 +61,7 @@ class _AddIncomeState extends State<AddIncome> {
                       amount: amount,
                       source: source,
                       date: widget.selectedDate ?? DateTime.now(),
+                      notes: notes, // Pass notes to Income
                     ),
                   );
                   if (mounted) {
