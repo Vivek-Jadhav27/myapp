@@ -74,7 +74,9 @@ class _AddExpenseState extends State<AddExpense> {
                       date: widget.selectedDate ?? DateTime.now(),
                     ),
                   );
-                  Navigator.pop(context);
+                  if (mounted) {
+                    Navigator.pop(context);
+                  }
                 }
               },
             )

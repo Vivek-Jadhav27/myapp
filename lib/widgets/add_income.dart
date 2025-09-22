@@ -57,7 +57,9 @@ class _AddIncomeState extends State<AddIncome> {
                       date: widget.selectedDate ?? DateTime.now(),
                     ),
                   );
-                  Navigator.pop(context);
+                  if (mounted) {
+                    Navigator.pop(context);
+                  }
                 }
               },
             )

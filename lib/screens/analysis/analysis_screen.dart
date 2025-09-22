@@ -36,10 +36,6 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Spending Analysis'),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-      ),
       body: user == null
           ? const Center(child: CircularProgressIndicator())
           : StreamBuilder<List<Expense>>(
