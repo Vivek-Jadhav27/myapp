@@ -1,12 +1,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:myapp/main.dart';
+import 'package:myapp/screens/analysis/analysis_screen.dart';
 import 'package:myapp/screens/calendar/calendar_screen.dart';
 import 'package:myapp/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  int _currentIndex = 0;
+  final List<Widget> _screens = [
+    const CalendarScreen(),
+    const AnalysisScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +27,7 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Finance Tracker'),
+        title: Text(_currentIndex == 0 ? 'Finance Tracker' : 'Spending Analysis'),
         actions: <Widget>[
           IconButton(
             icon: Icon(themeProvider.themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode),
@@ -31,7 +43,25 @@ class Home extends StatelessWidget {
           ),
         ],
       ),
-      body: const CalendarScreen(),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Analysis',
+          ),
+        ],
+      ),
     );
   }
 }

@@ -56,6 +56,7 @@ class AuthService {
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
         // Re-throw the exception to be handled by the calling function in AuthProvider
+        
         rethrow;
     }
   }
