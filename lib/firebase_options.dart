@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     projectId: 'finance-tracker-app-8572',
     storageBucket: 'finance-tracker-app-8572.firebasestorage.app',
   );
-
 }

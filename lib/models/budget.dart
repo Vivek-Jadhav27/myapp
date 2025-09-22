@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Budget {
@@ -7,7 +6,12 @@ class Budget {
   final String category;
   final double amount;
 
-  Budget({required this.id, required this.userId, required this.category, required this.amount});
+  Budget({
+    required this.id,
+    required this.userId,
+    required this.category,
+    required this.amount,
+  });
 
   factory Budget.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data() as Map<String, dynamic>;
@@ -20,10 +24,6 @@ class Budget {
   }
 
   Map<String, dynamic> toFirestore() {
-    return {
-      'userId': userId,
-      'category': category,
-      'amount': amount,
-    };
+    return {'userId': userId, 'category': category, 'amount': amount};
   }
 }

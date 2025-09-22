@@ -1,101 +1,58 @@
-# Blueprint
+
+# Project Blueprint
 
 ## Overview
 
-This document outlines the architecture, features, and design of the Finance Tracker app. It is intended to be a living document that will be updated as the app evolves.
+This document outlines the architecture, features, and design of the Flutter application. It serves as a single source of truth for the project, providing a comprehensive guide for developers and stakeholders.
+
+## Architecture
+
+The application follows a clean architecture pattern, with a clear separation of concerns between the data, domain, and presentation layers. This ensures that the codebase is modular, scalable, and easy to maintain.
+
+### Data Layer
+
+The data layer is responsible for all communication with external data sources, such as APIs and databases. It includes repositories that abstract the data sources from the rest of the application, as well as models that represent the data.
+
+### Domain Layer
+
+The domain layer contains the business logic of the application. It includes use cases that orchestrate the flow of data between the data and presentation layers, as well as entities that represent the core business objects.
+
+### Presentation Layer
+
+The presentation layer is responsible for the user interface. It includes widgets that display the data and handle user input, as well as providers that manage the state of the UI.
 
 ## Features
 
 ### Authentication
 
-*   Users can create an account with their email and password.
-*   Users can log in and out of the app.
-*   The app uses Firebase Authentication to manage user accounts.
+The application includes a complete authentication feature, with support for email and password login and registration. The authentication flow is handled by a dedicated `AuthWrapper` widget, which ensures that the user is always in a valid authentication state.
 
-### Expense & Income Tracking
+- **Login Screen**: A visually appealing screen that allows users to log in with their email and password.
+- **Registration Screen**: A user-friendly screen that allows new users to create an account.
+- **State Management**: The authentication state is managed by an `AuthNotifier` provider, which ensures that the UI is always up-to-date.
 
-*   Users can add new expenses and income.
-*   Users can view their expenses and income in a calendar view.
-*   Each expense is assigned to a category.
-*   Users can add notes to each expense.
+### Home Screen
 
-### Spending Analysis
+After a user successfully logs in, they are directed to the home screen. This screen displays a welcome message and provides a way for the user to log out.
 
-*   The app provides a pie chart that shows a breakdown of spending by category for the selected month.
-*   Users can navigate between months to view their spending history.
-
-### Custom Categories
-
-*   Users can create, delete, and reorder their own expense categories.
-*   The "Add Expense" form uses a dropdown menu with the user's custom categories.
-*   The "Spending Analysis" chart updates to reflect the user's custom categories.
-
-### User Profile
-
-*   Users can view and update their profile information, including their name and email address.
-
-### Financial Goals
-
-*   Users can set and track their financial goals.
-*   Each goal has a target amount and a deadline.
-*   The app displays the user's progress toward each goal.
-
-### Debt Payoff Tracker
-
-*   Users can track their progress in paying off their debts.
-*   Each debt has a total amount, interest rate, and minimum monthly payment.
-*   The app shows how much of each debt has been paid off.
-
-### AI-Powered Financial Assistant
-
-*   Users can ask financial questions and get personalized advice from an AI-powered chatbot.
-*   The chatbot is powered by Firebase Vertex AI.
-
-## Design
+- **Welcome Message**: A personalized welcome message that includes the user's email address.
+- **Logout Button**: A simple and intuitive way for the user to sign out of the application.
 
 ### Theme
 
-*   The app uses a pastel and friendly color scheme.
-*   It supports both light and dark modes.
-*   The `google_fonts` package is used for a clean and modern typography.
+The application includes a flexible and customizable theme, with support for both light and dark modes. The theme is managed by a `ThemeProvider`, which allows the user to switch between themes at any time.
+
+- **Color Scheme**: The color scheme is based on Material Design 3 principles, with a seed color that can be easily customized.
+- **Typography**: The typography is based on the `google_fonts` package, which provides a wide variety of fonts to choose from.
+
+## Design
+
+The application is designed to be visually appealing and easy to use. It follows modern design guidelines, with a clean and intuitive user interface.
+
+### Layout
+
+The layout is based on a card-based design, with a clear and consistent hierarchy of information. The use of whitespace and padding ensures that the UI is easy to read and navigate.
 
 ### Components
 
-*   The app is built with Material Design components.
-*   Custom styling is applied to create a unique and visually appealing user interface.
-
-## Architecture
-
-### State Management
-
-*   The app uses the `provider` package for state management.
-*   `ChangeNotifierProvider` is used to manage the theme and authentication state.
-*   A custom `CategoryProvider` is used to manage the user's expense categories.
-
-### Services
-
-*   `AuthService`: Manages user authentication with Firebase.
-*   `FirestoreService`: Interacts with the Firestore database to store and retrieve user data, expenses, income, financial goals, and debts.
-
-### Models
-
-*   `AppUser`: Represents a user of the app.
-*   `Expense`: Represents a single expense.
-*   `Income`: Represents a single income entry.
-*   `Category`: Represents an expense category.
-*   `FinancialGoal`: Represents a financial goal.
-*   `Debt`: Represents a debt.
-
-### Screens
-
-*   `Wrapper`: A top-level widget that determines whether to show the login screen or the home screen based on the user's authentication state.
-*   `LoginScreen`: Allows users to sign in or create an account.
-*   `Home`: The main screen of the app, which includes a bottom navigation bar to switch between the calendar and analysis views.
-*   `CalendarScreen`: Displays the user's expenses and income in a calendar format.
-*   `AnalysisScreen`: Shows a pie chart of the user's spending by category.
-*   `SettingsScreen`: Provides access to the "Manage Categories," "Profile," "Financial Goals," "Debt Payoff Tracker," and "Financial Assistant" screens.
-*   `ManageCategoriesScreen`: Allows users to manage their expense categories.
-*   `ProfileScreen`: Allows users to view and update their profile information.
-*   `FinancialGoalsScreen`: Allows users to set, track, and manage their financial goals.
-*   `DebtPayoffTrackerScreen`: Allows users to add, view, and manage their debts.
-*   `ChatScreen`: Provides a user interface for the AI-powered financial assistant.
+The application uses a variety of modern UI components, such as elevated buttons, text fields, and circular progress indicators. These components are styled to match the overall design of the application.

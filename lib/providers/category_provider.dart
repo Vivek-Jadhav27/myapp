@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,7 +42,8 @@ class CategoryProvider with ChangeNotifier {
   }
 
   void removeCategory(String category) {
-    if (_categories.length > 1) { // Prevent deleting the last category
+    if (_categories.length > 1) {
+      // Prevent deleting the last category
       _categories.remove(category);
       _saveCategories();
       notifyListeners();

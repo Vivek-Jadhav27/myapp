@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum TransactionType { income, expense }
@@ -36,7 +35,9 @@ class RecurringTransaction {
       type: TransactionType.values[data['type'] ?? 0],
       recurrence: Recurrence.values[data['recurrence'] ?? 0],
       startDate: (data['startDate'] as Timestamp).toDate(),
-      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
+      endDate: data['endDate'] != null
+          ? (data['endDate'] as Timestamp).toDate()
+          : null,
     );
   }
 
