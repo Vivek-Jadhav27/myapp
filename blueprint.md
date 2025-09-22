@@ -34,6 +34,23 @@ This document outlines the architecture, features, and design of the Finance Tra
 
 *   Users can view and update their profile information, including their name and email address.
 
+### Financial Goals
+
+*   Users can set and track their financial goals.
+*   Each goal has a target amount and a deadline.
+*   The app displays the user's progress toward each goal.
+
+### Debt Payoff Tracker
+
+*   Users can track their progress in paying off their debts.
+*   Each debt has a total amount, interest rate, and minimum monthly payment.
+*   The app shows how much of each debt has been paid off.
+
+### AI-Powered Financial Assistant
+
+*   Users can ask financial questions and get personalized advice from an AI-powered chatbot.
+*   The chatbot is powered by Firebase Vertex AI.
+
 ## Design
 
 ### Theme
@@ -58,7 +75,7 @@ This document outlines the architecture, features, and design of the Finance Tra
 ### Services
 
 *   `AuthService`: Manages user authentication with Firebase.
-*   `FirestoreService`: Interacts with the Firestore database to store and retrieve user data, expenses, and income.
+*   `FirestoreService`: Interacts with the Firestore database to store and retrieve user data, expenses, income, financial goals, and debts.
 
 ### Models
 
@@ -66,6 +83,8 @@ This document outlines the architecture, features, and design of the Finance Tra
 *   `Expense`: Represents a single expense.
 *   `Income`: Represents a single income entry.
 *   `Category`: Represents an expense category.
+*   `FinancialGoal`: Represents a financial goal.
+*   `Debt`: Represents a debt.
 
 ### Screens
 
@@ -74,6 +93,9 @@ This document outlines the architecture, features, and design of the Finance Tra
 *   `Home`: The main screen of the app, which includes a bottom navigation bar to switch between the calendar and analysis views.
 *   `CalendarScreen`: Displays the user's expenses and income in a calendar format.
 *   `AnalysisScreen`: Shows a pie chart of the user's spending by category.
-*   `SettingsScreen`: Provides access to the "Manage Categories" and "Profile" screens.
+*   `SettingsScreen`: Provides access to the "Manage Categories," "Profile," "Financial Goals," "Debt Payoff Tracker," and "Financial Assistant" screens.
 *   `ManageCategoriesScreen`: Allows users to manage their expense categories.
 *   `ProfileScreen`: Allows users to view and update their profile information.
+*   `FinancialGoalsScreen`: Allows users to set, track, and manage their financial goals.
+*   `DebtPayoffTrackerScreen`: Allows users to add, view, and manage their debts.
+*   `ChatScreen`: Provides a user interface for the AI-powered financial assistant.
