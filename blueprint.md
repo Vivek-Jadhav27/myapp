@@ -1,4 +1,3 @@
-
 # Project Blueprint
 
 ## Overview
@@ -21,38 +20,80 @@ The domain layer contains the business logic of the application. It includes use
 
 The presentation layer is responsible for the user interface. It includes widgets that display the data and handle user input, as well as providers that manage the state of the UI.
 
-## Features
+## Implemented & In-Progress Features
 
 ### Authentication
+- **Status**: Implemented
+- **Details**: A complete authentication feature with email/password login and registration. State is managed via `AuthNotifier`.
 
-The application includes a complete authentication feature, with support for email and password login and registration. The authentication flow is handled by a dedicated `AuthWrapper` widget, which ensures that the user is always in a valid authentication state.
+### Transaction Management
+- **Status**: Implemented
+- **Details**: The `transactions` feature is now fully implemented, allowing users to view a list of their transactions. The feature is integrated with Firestore and follows a clean architecture. State is managed via `TransactionProvider`.
+- **File Structure**:
+  ```
+  lib/features/
+  └── transactions/
+      ├── domain/
+      │   ├── entities/
+      │   │   └── transaction.dart
+      │   ├── repositories/
+      │   │   └── transaction_repo.dart
+      │   └── usecases/
+      │       ├── add_transaction_uc.dart
+      │       ├── get_transactions_uc.dart
+      │       ├── update_transaction_uc.dart
+      │       └── delete_transaction_uc.dart
+      ├── data/
+      │   ├── models/
+      │   │   ├── transaction_model.dart
+      │   │   ├── income_model.dart
+      │   │   └── expense_model.dart
+      │   ├── datasources/
+      │   │   └── transaction_ds.dart
+      │   └── repositories/
+      │       └── transaction_repo_impl.dart
+      └── presentation/
+          ├── screens/
+          │   └── transactions_screen.dart
+          └── provider/
+              └── transaction_provider.dart
+  ```
 
-- **Login Screen**: A visually appealing screen that allows users to log in with their email and password.
-- **Registration Screen**: A user-friendly screen that allows new users to create an account.
-- **State Management**: The authentication state is managed by an `AuthNotifier` provider, which ensures that the UI is always up-to-date.
+### Theming and UI
+- **Status**: Implemented
+- **Details**: The app supports both light and dark themes with a toggle. The initial `HomeScreen` has been replaced with the `TransactionsScreen` as the main screen after login.
 
-### Home Screen
+## Dependencies
 
-After a user successfully logs in, they are directed to the home screen. This screen displays a welcome message and provides a way for the user to log out.
+- `cloud_firestore`
+- `dartz`
+- `firebase_auth`
+- `firebase_core`
+- `get_it`
+- `google_fonts`
+- `provider`
 
-- **Welcome Message**: A personalized welcome message that includes the user's email address.
-- **Logout Button**: A simple and intuitive way for the user to sign out of the application.
+## Planned Enhancements
 
-### Theme
+### Advanced Transaction Features
+- **Add/Edit Transactions**: Implement the UI and logic for adding and editing transactions.
+- **Transaction Notes & Tags**: Allow users to add notes or tags to transactions for better context.
+- **Attachment Support**: Users can attach receipts or invoices as images.
 
-The application includes a flexible and customizable theme, with support for both light and dark modes. The theme is managed by a `ThemeProvider`, which allows the user to switch between themes at any time.
+### Enhanced Analysis & Insights
+- **Spending Analysis**: Implement UI for charts and category breakdowns.
+- **Spending Alerts**: Notify users when they approach or exceed budget limits.
+- **Comparison Charts**: Compare this month’s spending with previous months.
+- **Trend Predictions**: (Future Goal) Use past data to suggest likely future spending patterns.
 
-- **Color Scheme**: The color scheme is based on Material Design 3 principles, with a seed color that can be easily customized.
-- **Typography**: The typography is based on the `google_fonts` package, which provides a wide variety of fonts to choose from.
+### Budget Management
+- **Budget Feature**: Implement the UI and logic for setting and tracking budgets.
 
-## Design
+### Debt Payoff Tracker
+- **Debt Feature**: Implement the UI and logic for tracking and managing debts.
 
-The application is designed to be visually appealing and easy to use. It follows modern design guidelines, with a clean and intuitive user interface.
+### Financial Goals
+- **Goals Feature**: Implement the UI and logic for defining and monitoring financial goals.
 
-### Layout
-
-The layout is based on a card-based design, with a clear and consistent hierarchy of information. The use of whitespace and padding ensures that the UI is easy to read and navigate.
-
-### Components
-
-The application uses a variety of modern UI components, such as elevated buttons, text fields, and circular progress indicators. These components are styled to match the overall design of the application.
+### Recurring Transactions
+- **Recurring Transactions Feature**: Implement the UI and logic for managing automatic recurring transactions.

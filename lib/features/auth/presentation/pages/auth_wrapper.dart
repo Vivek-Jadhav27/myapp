@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/features/auth/presentation/pages/login_screen.dart';
 import 'package:myapp/features/auth/presentation/pages/register_screen.dart';
-import 'package:myapp/features/home/presentation/pages/home_screen.dart';
+import 'package:myapp/features/transactions/presentation/screens/transactions_screen.dart';
 import 'package:myapp/features/auth/presentation/provider/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +30,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
         return RegisterScreen(toggleView: toggleView);
       }
     } else {
-      return const HomeScreen();
+      return const TransactionsScreen();
     }
   }
 }
